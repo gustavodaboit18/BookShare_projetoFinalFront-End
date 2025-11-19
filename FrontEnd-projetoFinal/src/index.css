@@ -1,0 +1,159 @@
+/* ====== ROOT & TIPOGRAFIA ====== */
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ====== LINKS ====== */
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+/* ====== BODY ====== */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+  background-color: #242424;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+/* ====== HEADINGS ====== */
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+/* ====== BUTTONS ====== */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* ====== RESPONSIVO / MODO CLARO ====== */
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* ====== MAPA ====== */
+#map {
+  width: 100%;
+  height: 100%; /* deve ocupar o container */
+  min-height: 400px; /* garante que sempre tenha altura */
+}
+
+
+/* Container do mapa: altura mínima */
+.map-container {
+  width: 100%;
+  max-width: 1200px;
+  height: 400px; /* ajuste conforme quiser */
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ====== LEAFLET ====== */
+.leaflet-container {
+  z-index: 1;
+}
+
+/* ====== FORMULÁRIO E LISTA ====== */
+form,
+ul {
+  max-width: 600px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+form {
+  background-color: #1f1f1f;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+input {
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  border: 1px solid #555;
+  background-color: #2c2c2c;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #aaa;
+}
+
+ul {
+  background-color: #1f1f1f;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  list-style: none;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #444;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  background-color: #2a2a2a;
+}
+
+/* ====== BUSCA NO MAPA ====== */
+.input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.input-group input {
+  flex: 1;
+}
+
+.input-group button {
+  flex-shrink: 0;
+}
