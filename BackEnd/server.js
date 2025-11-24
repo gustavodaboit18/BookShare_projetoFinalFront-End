@@ -1,16 +1,24 @@
 const express = require("express");
 const cors = require("cors");
+require('dotenv').config();
+
 const booksRoutes = require("./routes/booksRoutes");
+const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+
+// Rotas
 app.use("/books", booksRoutes);
+app.use("/users", userRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Servidor Express funcionando!");
+  res.send("Servidor BookShare funcionando!");
 });
 
 app.listen(PORT, () => {
