@@ -10,16 +10,6 @@ import {
   Alert,
 } from "@mui/material";
 
-import {
-  Phone as PhoneIcon,
-  Email as EmailIcon,
-  LocationOn as LocationIcon,
-  Person as PersonIcon,
-  SwapHoriz as SwapIcon,
-  AttachMoney as MoneyIcon,
-  Delete as DeleteIcon,
-} from "@mui/icons-material";
-
 import BookCard from '../components/BookCard.jsx';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
@@ -38,8 +28,6 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const API_URL = 'http://localhost:3000';
-
-
 
 export default function BookList() {
   const [books, setBooks] = useState([]);
@@ -93,17 +81,25 @@ export default function BookList() {
         </Typography>
       </Box>
 
-      {/* Lista de livros */}
+      {/* Lista de livros: Garante 3 por linha e mesma altura */}
       <Grid
         container
         rowSpacing={3}
         columnSpacing={3}
-        justifyContent="center"
-        sx={{ px: 2 }}
+        justifyContent="flex-start" // Ajustado para alinhamento padrão
       >
         {books.map(book => (
-          <Grid item xs={12} sm={4} md={4} lg={4}>
-            <BookCard book={book} />
+          // 🏆 Ajuste Chave 1: Define a largura como 4 para 3 colunas (12/4 = 3)
+          <Grid 
+            item 
+            xs={12} 
+            sm={6} // 2 por linha em telas pequenas
+            md={4} // 3 por linha em telas médias e grandes
+            key={book.id} 
+            sx={{ display: 'flex' }} // 🏆 Ajuste Chave 2: Faz o item de grid ser um Flex Container
+          >
+            {/* 🏆 Ajuste Chave 3: O BookCard deve crescer para 100% da altura do Flex Container */}
+            <BookCard book={book} style={{ height: '100%' }} />
           </Grid>
         ))}
       </Grid>

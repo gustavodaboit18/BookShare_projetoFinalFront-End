@@ -10,6 +10,7 @@ import {
   Button,
   Avatar,
   CircularProgress,
+  Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -20,12 +21,15 @@ import {
   SwapHoriz as SwapIcon,
   AttachMoney as MoneyIcon,
   Delete as DeleteIcon,
+  MenuBook as BookIcon,
 } from '@mui/icons-material';
 import api from '../api.js';
+
 
 const FixedHeightCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
+  width: '100%',
   flexDirection: 'column',
   transition: 'transform 0.2s, box-shadow 0.2s',
   '&:hover': {
@@ -38,12 +42,25 @@ const TruncatedText = styled(Typography)({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   display: '-webkit-box',
-  WebkitLineClamp: 3, // Limita a 3 linhas
+  WebkitLineClamp: 3,
   WebkitBoxOrient: 'vertical',
-  minHeight: '4.5em', // Altura mínima para 3 linhas de texto
+  minHeight: '4.5em',
+  wordBreak: 'break-word',
 });
 
-export default function BookCard({ book, showDeleteButton = false, onDelete }) {
+const TruncatedTitle = styled(Typography)({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: '-webkit-box',
+  WebkitLineClamp: 2,
+  WebkitBoxOrient: 'vertical',
+  minHeight: '2.6em',
+  lineHeight: '1.3em',
+  fontWeight: 'bold',
+});
+
+
+export default function BookCard({ book, showDeleteButton = false, onDelete, style, sx }) { 
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
 
@@ -52,25 +69,30 @@ export default function BookCard({ book, showDeleteButton = false, onDelete }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm(`Tem certeza que deseja excluir o livro "${book.title}"?`)) {
-      setIsDeleting(true);
-      try {
-        await api.delete(`/books/${book.id}`);
-        if (onDelete) {
-          onDelete(book.user_id); // Chama a função de callback para atualizar a lista
-        }
-      } catch (error) {
-        console.error('Erro ao excluir livro:', error);
-        alert('Erro ao excluir livro. Tente novamente.');
-      } finally {
-        setIsDeleting(false);
+    if (!window.confirm(`Tem certeza que deseja excluir o livro "${book.title}"?`)) return;
+
+    setIsDeleting(true);
+
+    try {
+      await api.delete(`/books/${book.id}`);
+
+      if (onDelete) {
+        onDelete(book.user_id);
       }
+    } catch (error) {
+      console.error('Erro ao excluir livro:', error);
+      alert('Erro ao excluir livro. Tente novamente.');
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   return (
-    <FixedHeightCard elevation={3}>
-      {book.cover_image && (
+    
+    <FixedHeightCard elevation={3} style={style} sx={sx}>
+
+      {/* IMAGEM */}
+      {book.cover_image ? (
         <CardMedia
           component="img"
           height="280"
@@ -78,49 +100,59 @@ export default function BookCard({ book, showDeleteButton = false, onDelete }) {
           alt={book.title}
           sx={{ objectFit: 'cover' }}
         />
+      ) : (
+        <Box
+          sx={{
+            height: 280,
+            bgcolor: 'grey.200',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'grey.500',
+          }}
+        >
+          <BookIcon sx={{ fontSize: 60 }} />
+        </Box>
       )}
-      <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="h6" component="h2" gutterBottom fontWeight="bold">
+
+      {/* CONTEÚDO */}
+      <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+
+        {/* TÍTULO */}
+        <TruncatedTitle variant="h6" component="h2" gutterBottom>
           {book.title}
-        </Typography>
+        </TruncatedTitle>
+
         <Typography variant="body2" color="text.secondary" gutterBottom>
           por {book.author}
         </Typography>
 
-        {book.description && (
-          <TruncatedText variant="body2" sx={{ mt: 1, mb: 2 }} color="text.secondary">
-            {book.description}
-          </TruncatedText>
-        )}
+        {/* DESCRIÇÃO - Altura Fixa (3 linhas) */}
+        <TruncatedText variant="body2" sx={{ mt: 1, mb: 2 }} color="text.secondary">
+          {book.description || "Sem descrição disponível."}
+        </TruncatedText>
 
+        {/* CHIPS */}
         <Box sx={{ display: 'flex', gap: 1, mb: 2, flexWrap: 'wrap' }}>
           <Chip label={book.condition} size="small" color="primary" variant="outlined" />
           {book.is_for_sale && (
-            <Chip
-              icon={<MoneyIcon />}
-              label="Venda"
-              size="small"
-              color="success"
-              variant="outlined"
-            />
+            <Chip icon={<MoneyIcon />} label="Venda" size="small" color="success" variant="outlined" />
           )}
           {book.is_for_exchange && (
-            <Chip
-              icon={<SwapIcon />}
-              label="Troca"
-              size="small"
-              color="info"
-              variant="outlined"
-            />
+            <Chip icon={<SwapIcon />} label="Troca" size="small" color="info" variant="outlined" />
           )}
         </Box>
 
-        {book.price && (
-          <Typography variant="h6" color="primary" fontWeight="bold" gutterBottom>
-            R$ {parseFloat(book.price).toFixed(2)}
-          </Typography>
-        )}
+        {/* PREÇO - Garantindo Espaço Consistente */}
+        <Box sx={{ minHeight: '1.5em', mb: 1 }}>
+            {book.price && (
+                <Typography variant="h6" color="primary" fontWeight="bold" gutterBottom>
+                    R$ {parseFloat(book.price).toFixed(2)}
+                </Typography>
+            )}
+        </Box>
 
+        {/* ENDEREÇO */}
         {book.address && (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 2 }}>
             <LocationIcon fontSize="small" color="action" />
@@ -130,7 +162,7 @@ export default function BookCard({ book, showDeleteButton = false, onDelete }) {
           </Box>
         )}
 
-        {/* Informações do vendedor */}
+        {/* RODAPÉ */}
         <Box
           sx={{
             mt: 'auto', // Empurra para o final do CardContent
@@ -139,37 +171,33 @@ export default function BookCard({ book, showDeleteButton = false, onDelete }) {
             borderColor: 'divider',
           }}
         >
+
+          {/* VENDEDOR */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Avatar
-              src={book.user_profile_image}
-              alt={book.user_name}
-              sx={{ width: 32, height: 32 }}
-            />
+            <Avatar src={book.user_profile_image} alt={book.user_name} sx={{ width: 32, height: 32 }} />
             <Typography variant="body2" fontWeight="bold">
               {book.user_name}
             </Typography>
           </Box>
 
+          {/* TELEFONE */}
           <Box sx={{ display: 'flex', gap: 1, mb: 1 }}>
             {book.user_phone && (
-              <Chip
-                icon={<PhoneIcon />}
-                label={book.user_phone}
-                size="small"
-                variant="outlined"
-              />
+              <Chip icon={<PhoneIcon />} label={book.user_phone} size="small" variant="outlined" />
             )}
           </Box>
 
+          {/* EMAIL */}
           {book.user_email && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mb: 1 }}>
               <EmailIcon fontSize="small" color="action" />
-              <Typography variant="caption" color="text.secondary">
+              <Typography variant="caption" color="text.secondary" sx={{ wordBreak: 'break-all' }}>
                 {book.user_email}
               </Typography>
             </Box>
           )}
 
+          {/* BOTÕES FINAIS */}
           {showDeleteButton ? (
             <Button
               fullWidth
@@ -183,16 +211,46 @@ export default function BookCard({ book, showDeleteButton = false, onDelete }) {
               {isDeleting ? 'Excluindo...' : 'Excluir Livro'}
             </Button>
           ) : (
-            <Button
-              fullWidth
-              variant="outlined"
-              color="primary"
-              startIcon={<PersonIcon />}
-              onClick={() => handleViewProfile(book.user_id)}
-              sx={{ mt: 1 }}
-            >
-              Ver Perfil do Vendedor
-            </Button>
+            <>
+              {/* Botão Ver Perfil */}
+              <Button
+                fullWidth
+                variant="outlined"
+                color="primary"
+                startIcon={<PersonIcon />}
+                onClick={() => handleViewProfile(book.user_id)}
+                sx={{ mt: 1 }}
+              >
+                Ver Perfil do Vendedor
+              </Button>
+
+              {/* Botão Comprar */}
+              {book.is_for_sale ? (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="success"
+                  sx={{ mt: 1 }}
+                  onClick={() => navigate(`/payments/${book.id}`)}
+                >
+                  Comprar
+                </Button>
+              ) : (
+                <Tooltip title="Este livro é apenas para troca">
+                  <span>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="success"
+                      sx={{ mt: 1 }}
+                      disabled
+                    >
+                      Comprar
+                    </Button>
+                  </span>
+                </Tooltip>
+              )}
+            </>
           )}
         </Box>
       </CardContent>

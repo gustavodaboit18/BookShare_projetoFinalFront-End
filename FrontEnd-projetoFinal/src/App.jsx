@@ -10,6 +10,7 @@ import UserProfile from './pages/UserProfile';
 import MyProfile from './pages/MyProfile';
 import AuthScreen from './pages/AuthScreen';
 import { AuthProvider, useAuth } from './hooks/useAuth.jsx';
+import PaymentPage from "./pages/Payment.jsx";
 
 function Navigation() {
   const { user, logout } = useAuth();
@@ -135,6 +136,7 @@ function AppRoutes() {
       <Route path="/add-book" element={<PrivateRoute><AddBook /></PrivateRoute>} />
       <Route path="/profile/:userId" element={<UserProfile />} />
       <Route path="/my-profile" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
+      <Route path="/payments/:bookId" element={<PaymentPage />} />
     </Routes>
   );
 }

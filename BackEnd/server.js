@@ -5,6 +5,7 @@ require('dotenv').config();
 const booksRoutes = require("./routes/booksRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
+const paymentRoutes = require("./routes/payments")
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,8 @@ app.use(express.json());
 app.use("/books", booksRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
+app.use("/payments", paymentRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("Servidor BookShare funcionando!");
@@ -24,3 +27,5 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
+

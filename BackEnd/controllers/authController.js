@@ -4,6 +4,10 @@ const userModel = require('../models/userModel');
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET não definido. Verifique seu arquivo .env');
+}
+
 // Registro
 async function register(req, res) {
   try {
