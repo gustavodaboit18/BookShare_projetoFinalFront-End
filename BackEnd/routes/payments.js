@@ -68,10 +68,10 @@ router.get("/status/:mpPaymentId", async (req, res) => {
   const { mpPaymentId } = req.params;
 
  
-  return res.json({ status: "approved" }); // use para teste
+  // return res.json({ status: "approved" }); // use para teste
 
   // Código real, descomente quando necessario
-  /*
+  
   try {
     const response = await axios.get(
       `https://api.mercadopago.com/v1/payments/${mpPaymentId}`,
@@ -84,7 +84,7 @@ router.get("/status/:mpPaymentId", async (req, res) => {
   } catch (err) {
     console.error("Erro ao consultar status no MP:", err);
     res.status(500).json({ error: "Erro ao consultar status do pagamento" });
-  }*/
+  }
   
 });
 

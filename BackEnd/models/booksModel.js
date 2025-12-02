@@ -92,6 +92,30 @@ async function updateBook(id, bookData) {
   );
   return result.rows[0];
 }
+// Atualizar livro
+async function updateBook(id, bookData) {
+  const { 
+    title, author, description, price, condition, 
+    is_for_sale, is_for_exchange, cover_image,
+    latitude, longitude, address 
+  } = bookData;
+  
+  const result = await pool.query(
+    `UPDATE books 
+     SET title = $1, author = $2, description = $3, price = $4, 
+         condition = $5, is_for_sale = $6, is_for_exchange = $7, 
+         cover_image = $8, latitude = $9, longitude = $10, address = $11,
+         updated_at = CURRENT_TIMESTAMP
+     WHERE id = $12 
+     RETURNING *`,
+    [
+      title, author, description, price, condition,
+      is_for_sale, is_for_exchange, cover_image,
+      latitude, longitude, address, id
+    ]
+  );
+  return result.rows[0];
+}
 
 // Deletar livro
 async function deleteBook(id) {
