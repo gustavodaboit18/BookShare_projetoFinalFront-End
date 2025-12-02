@@ -8,6 +8,7 @@ import {
   Paper,
   CircularProgress,
   Alert,
+  Button
 } from "@mui/material";
 
 import BookCard from '../components/BookCard.jsx';
@@ -86,20 +87,27 @@ export default function BookList() {
         container
         rowSpacing={3}
         columnSpacing={3}
-        justifyContent="flex-start" // Ajustado para alinhamento padrão
+        justifyContent="center"
+        alignItems="stretch"
       >
         {books.map(book => (
-          // 🏆 Ajuste Chave 1: Define a largura como 4 para 3 colunas (12/4 = 3)
-          <Grid 
-            item 
-            xs={12} 
-            sm={6} // 2 por linha em telas pequenas
-            md={4} // 3 por linha em telas médias e grandes
-            key={book.id} 
-            sx={{ display: 'flex' }} // 🏆 Ajuste Chave 2: Faz o item de grid ser um Flex Container
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            display="flex"
+            justifyContent="center"
+            key={book.id}
           >
-            {/* 🏆 Ajuste Chave 3: O BookCard deve crescer para 100% da altura do Flex Container */}
-            <BookCard book={book} style={{ height: '100%' }} />
+            <BookCard
+              book={book}
+              sx={{
+                width: "100%",
+                maxWidth: 360,
+                height: "100%",
+              }}
+            />
           </Grid>
         ))}
       </Grid>
@@ -153,6 +161,15 @@ export default function BookList() {
                       <Typography variant="caption" display="block">
                         {book.address}
                       </Typography>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        size="small"
+                        onClick={() => navigate(`/profile/${book.user_id}`)}
+                        sx={{ mt: 1 }}
+                      >
+                        Ver Perfil do Vendedor
+                      </Button>
                     </Box>
                   </Popup>
                 </Marker>

@@ -22,14 +22,16 @@ import {
   AttachMoney as MoneyIcon,
   Delete as DeleteIcon,
   MenuBook as BookIcon,
+  Edit as EditIcon
 } from '@mui/icons-material';
 import api from '../api.js';
 
 
 const FixedHeightCard = styled(Card)(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  width: '100%',
+  minHeight: 520,      // altura mínima padrão
+  height: "100%",      // ajustar ao container
+  display: "flex",
+  width: "100%",
   flexDirection: 'column',
   transition: 'transform 0.2s, box-shadow 0.2s',
   '&:hover': {
@@ -60,7 +62,7 @@ const TruncatedTitle = styled(Typography)({
 });
 
 
-export default function BookCard({ book, showDeleteButton = false, onDelete, style, sx }) { 
+export default function BookCard({ book, showDeleteButton = false, showEditButton = false, onDelete, onEdit, style, sx }) { 
   const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
 
@@ -115,7 +117,7 @@ export default function BookCard({ book, showDeleteButton = false, onDelete, sty
         </Box>
       )}
 
-      {/* CONTEÚDO */}
+      {/* CONTEÚDO */}      
       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
 
         {/* TÍTULO */}
@@ -198,19 +200,36 @@ export default function BookCard({ book, showDeleteButton = false, onDelete, sty
           )}
 
           {/* BOTÕES FINAIS */}
-          {showDeleteButton ? (
-            <Button
-              fullWidth
-              variant="contained"
-              color="error"
-              startIcon={isDeleting ? <CircularProgress size={20} color="inherit" /> : <DeleteIcon />}
-              onClick={handleDelete}
-              disabled={isDeleting}
-              sx={{ mt: 1 }}
-            >
-              {isDeleting ? 'Excluindo...' : 'Excluir Livro'}
-            </Button>
-          ) : (
+          {showDeleteButton || showEditButton ? (
+	            <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+	              {showEditButton && (
+	                <Button
+	                  fullWidth
+	                  variant="outlined"
+	                  color="primary"
+	                  startIcon={<EditIcon />}
+	                  onClick={() => onEdit(book)}
+	                  sx={{ flex: 1 }}
+	                >
+	                  Editar
+	                </Button>
+	              )}
+	              {showDeleteButton && (
+	                <Button
+	                  fullWidth
+	                  variant="contained"
+	                  color="error"
+	                  startIcon={isDeleting ? <CircularProgress size={20} color="inherit" /> : <DeleteIcon />}
+	                  onClick={handleDelete}
+	                  disabled={isDeleting}
+	                  sx={{ flex: 1 }}
+	                >
+	                  {isDeleting ? 'Excluindo...' : 'Excluir'}
+	                </Button>
+	              )}
+	            </Box>
+	          ) : (
+
             <>
               {/* Botão Ver Perfil */}
               <Button
