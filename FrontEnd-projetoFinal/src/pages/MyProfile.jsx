@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Typography, Box, Paper, Grid, Avatar, Chip, Button, CircularProgress, Alert } from '@mui/material';
-import { Phone as PhoneIcon, Email as EmailIcon, LocationOn as LocationIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Container, Typography, Box, Paper, Grid, Avatar, Chip, Button, CircularProgress, Alert, Modal } from '@mui/material';
+import { Phone as PhoneIcon, Email as EmailIcon, LocationOn as LocationIcon, Delete as DeleteIcon, Edit as EditIcon } from '@mui/icons-material';
 import { useAuth } from '../hooks/useAuth.jsx';
 import api from '../api.js';
 import BookCard from '../components/BookCard.jsx';
+import AddBook from './AddBook.jsx'; // Reutilizar o formulário de cadastro para edição
 
 export default function MyProfile() {
   const { user, loading: authLoading } = useAuth();
   const [userBooks, setUserBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bookToEdit, setBookToEdit] = useState(null);
 
   const fetchUserBooks = async (userId) => {
     try {
@@ -22,6 +25,17 @@ export default function MyProfile() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (book) => {
+    setBookToEdit(book);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setBookToEdit(null);
+    fetchUserBooks(user.id); // Recarrega a lista após fechar o modal (se houve edição)
   };
 
   useEffect(() => {
@@ -107,10 +121,38 @@ export default function MyProfile() {
       <Grid container spacing={4}>
         {userBooks.map((book) => (
           <Grid item key={book.id} xs={12} sm={6} md={4} lg={3} sx={{ display: 'flex' }}>
-            <BookCard book={book} showDeleteButton={true} onDelete={() => fetchUserBooks(user.id)} />
+            <BookCard 
+              book={book} 
+              showDeleteButton={true} 
+              onDelete={() => fetchUserBooks(user.id)} 
+              showEditButton={true}
+              onEdit={handleEdit}
+            />
           </Grid>
         ))}
       </Grid>
+
+      {/* Modal de Edição */}
+      <Modal open={isModalOpen} onClose={handleCloseModal}>
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '90%', md: '70%' },
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2,
+        }}>
+          <Typography variant="h5" component="h2" gutterBottom color="primary" fontWeight="bold">
+            {bookToEdit ? 'Editar Livro' : 'Cadastrar Livro'}
+          </Typography>
+          <AddBook bookToEdit={bookToEdit} onFinish={handleCloseModal} />
+        </Box>
+      </Modal>
     </Container>
   );
 }
