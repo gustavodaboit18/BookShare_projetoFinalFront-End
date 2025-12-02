@@ -11,7 +11,8 @@ Instalação de Dependências: Backend (API): Navegue até a pasta da API e exec
 Variáveis de Ambiente: Crie um arquivo .env na raiz do seu Backend e adicione:Bash PORT=3000 API_URL=http://localhost:3000
 
 # Chave Privada do Mercado Pago
-MP_ACCESS_TOKEN="SUA_CHAVE_DE_ACESSO_PRIVADA_AQUI"2.  
+MP_ACCESS_TOKEN="SUA_CHAVE_DE_ACESSO_PRIVADA_AQUI" <- essa é a propriedade que deve ter no seu .env para ativação da API MP
+2.  
 🔌 Dependências Chave: certifique-se de que as seguintes bibliotecas estão presentes: 
 Ambiente | Biblioteca | Função Principal |  
 | Backend | 'express' | Servidor e rotas da API. |  
