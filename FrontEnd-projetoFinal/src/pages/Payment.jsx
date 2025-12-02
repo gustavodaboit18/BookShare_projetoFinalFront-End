@@ -1,9 +1,30 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, Card, CardContent, Divider, Button, Modal } from "@mui/material";
+import { Box, Typography, Card, CardContent, Divider, Button, Modal, Container } from "@mui/material";
 import { QRCodeSVG } from "qrcode.react";
 import api from "../api.js";
+import { CircularProgress } from "@mui/material";
 
+const PixLoading = ({ message }) => (
+  <Box 
+    sx={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      height: '80vh', 
+      textAlign: 'center' 
+    }}
+  >
+    <CircularProgress color="primary" size={60} sx={{ mb: 3 }} />
+    <Typography variant="h5" fontWeight="bold" color="text.primary" sx={{ mb: 1 }}>
+      Processando Pagamento...
+    </Typography>
+    <Typography variant="subtitle1" color="text.secondary">
+      {message}
+    </Typography>
+  </Box>
+);
 
 export default function PaymentPage() {
   const navigate = useNavigate();
@@ -77,23 +98,27 @@ export default function PaymentPage() {
   }, [mpPaymentId]);
 
   // Renderizar loading enquanto livro ou QRCode não estiverem disponíveis
-  if (!book) return <Typography>Carregando livro...</Typography>;
-  if (!qrCode) return <Typography>Gerando pagamento PIX...</Typography>;
+  if (!book) {
+    return <PixLoading message="Buscando detalhes do livro e valor da compra." />;
+  }
+  if (!qrCode) {
+    return <PixLoading message="Comunicando com a API do PIX para gerar o QR Code. Isso pode levar alguns segundos." />;
+  }
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mt: 4, px: 2 }}>
-      <Card sx={{ maxWidth: 400, width: "100%", p: 2, boxShadow: 3 }}>
+    <Container maxWidth="sm" sx={{ py: 4 }}>
+      <Card sx={{ width: "100%", p: 2, boxShadow: 3, borderRadius: 2 }}>
         <CardContent sx={{ textAlign: "center" }}>
-          <Typography variant="h6" gutterBottom>
-            Confirme seu pagamento
-          </Typography>
+          <Typography variant="h4" component="h1" color="primary" fontWeight="bold" gutterBottom>
+	            Confirme seu pagamento
+	          </Typography>
 
           <Divider sx={{ my: 2 }} />
 
-          <Typography variant="subtitle1"><strong>Livro:</strong> {book?.title}</Typography>
-          {book?.author && <Typography variant="subtitle2"><strong>Autor:</strong> {book.author}</Typography>}
-          <Typography variant="subtitle1"><strong>Preço:</strong> R$ {Number(book?.price ?? 0).toFixed(2)}</Typography>
-          <Typography variant="subtitle1" sx={{ mt: 1 }}><strong>Forma de pagamento:</strong> PIX</Typography>
+          <Typography variant="h5" sx={{ mt: 2, fontWeight: 'bold' }}>Livro: {book?.title}</Typography>
+          {book?.author && <Typography variant="subtitle1" color="text.secondary">Autor: {book.author}</Typography>}
+          <Typography variant="h3" color="success.main" fontWeight="bold" sx={{ mt: 1 }}>R$ {Number(book?.price ?? 0).toFixed(2)}</Typography>
+          <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>Forma de pagamento: <Box component="span" fontWeight="bold" color="primary.main">PIX</Box></Typography>
 
           <Divider sx={{ my: 2 }} />
 
@@ -110,15 +135,17 @@ export default function PaymentPage() {
           )}
 
           {ticketUrl && (
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2 }}
-              href={ticketUrl}
-              target="_blank"
-            >
-              Abrir pagamento no navegador
-            </Button>
+              <Button
+	              variant="contained"
+	              color="primary"
+	              size="large"
+	              sx={{ mt: 2, py: 1.5 }}
+	              href={ticketUrl}
+	              target="_blank"
+	              fullWidth
+	            >
+	              Abrir pagamento no navegador
+	            </Button>
           )}
         </CardContent>
       </Card>
@@ -126,7 +153,7 @@ export default function PaymentPage() {
       {/* Modal de pagamento confirmado */}
       <Modal
         open={paymentConfirmed}
-        onClose={() => { }}
+        onClose={() => {}}
       >
         <Box sx={{
           position: 'absolute',
@@ -147,6 +174,7 @@ export default function PaymentPage() {
           <Typography sx={{ mb: 3 }}>
             Obrigado por comprar o livro {book?.title}.
           </Typography>
+
           <Button
             variant="contained"
             color="success"
@@ -169,7 +197,7 @@ export default function PaymentPage() {
 
         </Box>
       </Modal>
-
-    </Box>
-  );
-}
+      
+      </Container>
+	  );
+	}
