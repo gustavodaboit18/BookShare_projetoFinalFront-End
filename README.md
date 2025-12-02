@@ -1,8 +1,8 @@
 # 📚 BookShare - Clube de Troca de Livros
 
-Este projeto é uma plataforma para troca de livros, conectando leitores através de mapas interativos
+Este projeto é uma plataforma para troca e venda de livros, conectando leitores através de mapas interativos
 
-🚀 Guia Resumido de Instalação do Projeto BookShare. Este é um resumo dos passos de instalação e configuração do seu projeto, dividido nas partes de Backend (Node.js) e Frontend (React/Material UI).1. 
+🚀 Guia Resumido de Instalação do Projeto BookShare. Este é um resumo dos passos de instalação e configuração do seu projeto, dividido nas partes de Backend (Node.js) e Frontend (React/Material UI). 
 
 ⚙️ Instalação e Configuração Geral: pré-requisitos: certifique-se de ter Node.js e npm instalados. 
 npm install nodemon
