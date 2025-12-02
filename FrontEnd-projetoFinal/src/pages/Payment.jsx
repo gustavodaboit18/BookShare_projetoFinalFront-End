@@ -126,10 +126,7 @@ export default function PaymentPage() {
       {/* Modal de pagamento confirmado */}
       <Modal
         open={paymentConfirmed}
-        onClose={() => {
-          setPaymentConfirmed(false);
-          navigate("/books"); // redireciona para a lista de livros
-        }}
+        onClose={() => { }}
       >
         <Box sx={{
           position: 'absolute',
@@ -142,23 +139,37 @@ export default function PaymentPage() {
           boxShadow: 24,
           textAlign: 'center'
         }}>
+
           <Typography variant="h6" gutterBottom>
             Pagamento confirmado!
           </Typography>
-          <Typography sx={{ mb: 2 }}>
+
+          <Typography sx={{ mb: 3 }}>
             Obrigado por comprar o livro {book?.title}.
           </Typography>
           <Button
             variant="contained"
-            onClick={() => {
-              setPaymentConfirmed(false);
-              navigate("/books"); 
-            }}
+            color="success"
+            sx={{ mb: 2 }}
+            href={`http://localhost:3000/payments/comprovante/${mpPaymentId}`}
+            target="_blank"
+          >
+            Gerar Comprovante PDF
+          </Button>
+
+          <br />
+
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() => navigate("/books")}
           >
             Fechar
           </Button>
+
         </Box>
       </Modal>
+
     </Box>
   );
 }

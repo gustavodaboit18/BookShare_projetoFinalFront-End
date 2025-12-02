@@ -2,10 +2,12 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const gerarComprovantePDF = require("../gerarComprovantePDF");
 
 // Criar pagamento PIX
 router.post("/pix", async (req, res) => {
-  const { bookId, title, price } = req.body;
+  const { bookId, title, price, buyer } = req.body;
 
   const transactionAmount = parseFloat(price);
   if (!price || isNaN(transactionAmount) || transactionAmount <= 0) {
@@ -34,12 +36,23 @@ router.post("/pix", async (req, res) => {
 
     const payment = response.data;
 
-    // Retorna info para o frontend
+    //  Gera o comprovante
+    gerarComprovantePDF({
+      paymentId: payment.id,
+      title,
+      price: transactionAmount,
+      buyer: buyer || "Cliente BookShare",
+      date: new Date().toLocaleString("pt-BR"),
+    });
+
+    //  Retorna info para o frontend
     return res.json({
       mpPaymentId: payment.id,
       qr_code: payment.point_of_interaction.transaction_data.qr_code,
       qr_code_base64: payment.point_of_interaction.transaction_data.qr_code_base64,
+      comprovante_pdf_url: `/payments/comprovante/${payment.id}`,
     });
+
   } catch (err) {
     const apiError = err.response ? err.response.data : { message: err.message };
     console.error("Erro ao criar pagamento PIX:", apiError);
@@ -50,10 +63,15 @@ router.post("/pix", async (req, res) => {
   }
 });
 
-// Rota para verificar status do pagamento pelo Mercado Pago
+// Verificar status do pagamento
 router.get("/status/:mpPaymentId", async (req, res) => {
   const { mpPaymentId } = req.params;
 
+ 
+  return res.json({ status: "approved" }); // use para teste
+
+  // Código real, descomente quando necessario
+  /*
   try {
     const response = await axios.get(
       `https://api.mercadopago.com/v1/payments/${mpPaymentId}`,
@@ -66,7 +84,20 @@ router.get("/status/:mpPaymentId", async (req, res) => {
   } catch (err) {
     console.error("Erro ao consultar status no MP:", err);
     res.status(500).json({ error: "Erro ao consultar status do pagamento" });
-  }
+  }*/
+  
+});
+
+// Rota para baixar o comprovante PDF
+router.get("/comprovante/:paymentId", (req, res) => {
+  const { paymentId } = req.params;
+
+  const filePath = path.join(
+    __dirname,
+    `../comprovantes/comprovante_${paymentId}.pdf`
+  );
+
+  return res.download(filePath, `comprovante_${paymentId}.pdf`);
 });
 
 module.exports = router;

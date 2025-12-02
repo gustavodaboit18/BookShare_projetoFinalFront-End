@@ -6,6 +6,7 @@ const booksRoutes = require("./routes/booksRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const paymentRoutes = require("./routes/payments")
+const comprovantes = require("./gerarComprovantePDF")
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use("/books", booksRoutes);
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/payments", paymentRoutes);
+app.use("/comprovantes", comprovantes);
 
 
 app.get("/", (req, res) => {
