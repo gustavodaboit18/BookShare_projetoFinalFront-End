@@ -7,8 +7,10 @@ Este projeto é uma plataforma para troca e venda de livros, conectando leitores
 ⚙️ Instalação e Configuração Geral: pré-requisitos: certifique-se de ter Node.js e npm instalados. 
 npm install nodemon
 npm install express
-Instalação de Dependências: Backend (API): Navegue até a pasta da API e execute: Bash npm install. Frontend (React): Navegue até a pasta do cliente e execute:Bash npm install.
-Variáveis de Ambiente: Crie um arquivo .env na raiz do seu Backend e adicione:Bash PORT=3000 API_URL=http://localhost:3000
+Instalação de Dependências: 
+Backend (API): Navegue até a pasta da API e execute: Bash npm install.
+Frontend (React): Navegue até a pasta do cliente e execute:Bash npm install.
+Variáveis de Ambiente: Crie um arquivo .env na raiz do seu Backend e adicione: PORT=3000 API_URL=http://localhost:3000
 
 # Chave Privada do Mercado Pago
 MP_ACCESS_TOKEN="SUA_CHAVE_DE_ACESSO_PRIVADA_AQUI" <- essa é a propriedade que deve ter no seu .env para ativação da API MP
@@ -19,7 +21,8 @@ Ambiente | Biblioteca | Função Principal |
 | Backend | 'axios' | Cliente HTTP para chamar a API do Mercado Pago (solução para o SDK com erro). |  
 | Frontend | '@mui/material' | Componentes visuais (Material UI). |  
 | Frontend | 'react-leaflet', 'leaflet' | Mapas de localização. |  
-| Frontend | 'axios' |Comunicação com o Backend.| 3.   
+| Frontend | 'axios' |Comunicação com o Backend.| 
+3.   
 ▶️ Como Iniciar: 
 | Ambiente | Comando | Acesso | Backend npm start (ou node server.js) | http://localhost:3000. |  
 Frontend npm start (ou npm run dev) http://localhost:PORTA_DO_REACT
